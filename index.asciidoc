@@ -1,0 +1,30 @@
+= Machine Learning with Apache Mahout
+
+image::images/mahout-logo-100.png[Mahout Logo]
+
+include::introduction.asciidoc[]
+
+include::data-mining.asciidoc[]
+
+include::machine-learning.asciidoc[]
+
+include::apache-mahout.asciidoc[]
+
+include::setup.asciidoc[]
+
+include::usage.asciidoc[]
+
+include::recommendation.asciidoc[]
+
+include::classification.asciidoc[]
+
+include::clustering.asciidoc[]
+
+include::text-mining.asciidoc[]
+
+include::closing.asciidoc[]
+
+include::tipsntricks.asciidoc[]
+
+include::resources.asciidoc[]
+

@@ -1,0 +1,75 @@
+## Setting up Apache Mahout
+
+Requirements for Setting Up:
+
+* Java
+* IDE - Eclipse
+* Maven
+* Apache Mahout distribution ( preferably the latest version )
+* Apache Hadoop
+
+We need to setup Apache Hadoop 1.2.1 and Apache Mahout
+
+* Setup Hadoop: descripbed link:/pages/hadoop.html[here]
+* Setup Mahout ( 0.9 )
+
+Apache Mahout setup
+
+----------------------------------------------------------------------------------
+$ wget -c http://archive.apache.org/dist/mahout/0.9/mahout-distribution-0.9.tar.gz
+$ tar zxf mahout-distribution-0.9.tar.gz
+$ cd mahout-distribution-0.9
+----------------------------------------------------------------------------------
+
+Setup env variables:
+
+---------------------------------------------------
+export HADOOP_HOME=/path/to/hadoop-1.2.1
+export PATH=$HADOOP_HOME/bin:$PATH
+export MAHOUT_HOME=/path/to/mahout-distribution-0.9
+export PATH=$MAHOUT_HOME/bin:$PATH
+---------------------------------------------------
+
+### First example
+
+Canopy Clustering example
+
+------------
+$ wget http://archive.ics.uci.edu/ml/databases/synthetic_control/synthetic_control.data
+$ hadoop fs -mkdir /canopy-testdata
+$ hadoop fs -copyFromLocal /home/tuxdna/work/learn/external/synthetic_control.data /canopy-testdata/
+$ mahout org.apache.mahout.clustering.syntheticcontrol.canopy.Job -i hdfs://localhost:9000/canopy-testdata/ -o /canopy-output -t1 80 -t2 55
+------------
+
+Dump the clusters
+
+------------
+$ mahout clusterdump -i hdfs://localhost:9000/canopy-output/clusters-*-final  -o /home/tuxdna/clusteranalyze.txt
+------------
+
+we can also download outut sequence files
+
+------------
+$ hadoop fs -get hdfs://localhost:9000/canopy-output ~/Downloads/
+$ mahout clusterdump -i /home/tuxdna/Downloads/output/clusters-0-final/ --pointsDir /home/tuxdna/Downloads/output/clusteredPoints/ -o /home/tuxdna/Downloads/output/clusteranalyze.txt
+------------
+
+Got this error ?
+http://stackoverflow.com/questions/11148175/is-there-any-seqfiledir-option-for-clusterdump-in-the-latest-apache-mahout-l[Fixed
+by this]
+
+------------
+Unexpected --seqFileDir while processing Job-Specific Options:
+------------
+
+Fixed command
+
+------------
+$ mahout clusterdump -i output/clusters-0-final/ --pointsDir output/clusteredPoints/ --output /tmp/clusteranalyze.txt
+Running on hadoop, using /home/tuxdna/work/learn/external/hadoop-1.1.1/bin/hadoop and HADOOP_CONF_DIR=
+MAHOUT-JOB: /home/tuxdna/work/learn/external/mahout-distribution-0.7/mahout-examples-0.7-job.jar
+13/05/22 18:45:10 INFO common.AbstractJob: Command line arguments: {--dictionaryType=[text], --distanceMeasure=[org.apache.mahout.common.distance.SquaredEuclideanDistanceMeasure], --endPhase=[2147483647], --input=[/home/tuxdna/Downloads/output/clusters-0-final/], --output=[/home/tuxdna/Downloads/output/clusteranalyze.txt], --outputFormat=[TEXT], --pointsDir=[/home/tuxdna/Downloads/output/clusteredPoints/], --startPhase=[0], --tempDir=[temp]}
+13/05/22 18:45:10 INFO clustering.ClusterDumper: Wrote 0 clusters
+13/05/22 18:45:10 INFO driver.MahoutDriver: Program took 629 ms (Minutes: 0.010483333333333334)
+------------
+

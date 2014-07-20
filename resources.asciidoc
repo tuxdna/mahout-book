@@ -1,0 +1,28 @@
+
+== Resources
+
+=== References
+
+* http://www.williamhertling.com/2010/04/machine-learning-and-data-mining-in.html[Machine Learning and Data Mining in Ruby and R]
+* http://www.slideshare.net/danielglauser/machine-learning-with-apache-mahout[Machine Learning with Apache Mahout]
+* http://www.slideshare.net/gsingers/intro-to-apache-mahout[Introduction to Apache Mahout]
+* http://people.apache.org/~isabel/site/taste.html[Apache Taste]
+* http://www.slideshare.net/Cataldo/tutoria-mahout-recommendation[Apache Mahout Recommender Tutorial]
+* http://skife.org/mahout/2013/02/14/first_steps_with_mahout.html[First Steps with Apache Mahout - Classification]
+* http://ssc.io/deploying-a-massively-scalable-recommender-system-with-apache-mahout/[Apache Mahout and MySQL]
+* http://www.socialresearchmethods.net/kb/statcorr.php[Correlation explained]
+* http://strataconf.com/strata2013/public/schedule/detail/27390[Third Generation Tools for Realizing Machine Learning Algorithms]
+* https://stackoverflow.com/questions/8102515/selecting-an-appropriate-similarity-metric-assessing-the-validity-of-a-k-means[Selecting an appropriate similarity metric & assessing the validity of a k-means clustering model]
+* https://blog.trifork.com/2014/02/04/an-introduction-to-mahouts-logistic-regression-sgd-classifier/[An Introduction To Mahout's Logistic Regression SGD Classifier]
+* http://weatheringthrutechdays.blogspot.com.br/2013/07/scala-dsl-for-mahout-in-core-linear.html[Mahout Scala]
+* http://skife.org/mahout/2013/02/14/first_steps_with_mahout.html[Mahout SGD Example]
+* http://stackoverflow.com/questions/4064630/how-do-i-convert-between-a-measure-of-similarity-and-a-measure-of-difference-di[Converting Similariy to Distance and vice-versa]
+* http://www.cyclismo.org/tutorial/R/probability.html[Probability Distributions in R]
+* http://su.diva-portal.org/smash/get/diva2:189276/FULLTEXT01[Word Space Model] by Magnus Sahlgren
+* https://stackoverflow.com/questions/8102515/selecting-an-appropriate-similarity-metric-assessing-the-validity-of-a-k-means[Selecting an appropriate similarity metric & assessing the validity of a k-means clustering model]
+* http://stackoverflow.com/questions/4064630/how-do-i-convert-between-a-measure-of-similarity-and-a-measure-of-difference-di[Converting Similarity to Distance and vice-versa]
+* http://mahout.apache.org/users/sparkbindings/home.html[Mahout Scala and Spark bindings]
+* http://en.wikipedia.org/wiki/Multivariate_normal_distribution[Multivariate Normal Distribution]
+* http://horicky.blogspot.in/2011/09/recommendation-engine.html[Recommendation Engine]
+* http://www.holehouse.org/mlclass/06_Logistic_Regression.html[Logistic Regression]
+* http://www.mapr.com/practical-machine-learning[Practical Machine Learning]

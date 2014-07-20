@@ -1,0 +1,12 @@
+## Closing Remarks
+
+### Mahout 0.7
+
+* dirichlet
+* kmeans / fkmeans: throwing errors with heap space
+
+### Mahout 0.9
+
+* dirichlet doesn't exist
+* kmeans / fkmeans work better without throwing any errors
+

@@ -1,0 +1,12 @@
+## Text Mining
+
+Discussion on http://lucene.472066.n3.nabble.com/Calculate-Term-Co-occurrence-Matrix-td1226990.html[Calculate Term-Cooccurence]
+
+https://cwiki.apache.org/confluence/display/MAHOUT/Collocations[Apache Mahout Collocations]
+
+High Frequency Terms/Phrases at the Index level https://issues.apache.org/jira/browse/LUCENE-474[JIRA Ticket LUCENE-474]
+
+http://stackoverflow.com/questions/7393908/what-is-the-easiest-way-to-implement-terms-association-mining-in-solr[What is the easiest way to implement terms association mining in Solr?]
+
+http://www.cs.princeton.edu/~blei/topicmodeling.html[Topic Modeling]
+

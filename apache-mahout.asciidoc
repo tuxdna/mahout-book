@@ -1,0 +1,29 @@
+== Apache Mahout
+
+Introduction to Apache Mahout: It started as a sub project of Lucene. (More to do with Hadoop.) Sean Owen started Taste Project ( Recommender Systems ) in 2005.
+
+What is covered in this guide?
+
+* Setting up Apache Mahout 0.9 with Apache Hadoop 1.2.1
+* Basics: Similarity / Distance / Dissimilarity Metrics
+* Mahout Algorithm: Recommendation Algorithms, Clustering Algorithms, Classification Algorithms
+* Mahout Scala primitives
+* Examples
+
+### Apache Mahout Algorithms
+
+image::images/mahout-logo-100.png[Mahout Logo]
+
+Some use-cases:
+
+* *Product Recommendation*: understanding / inferring what your
+customers are looking for
+* *Topic Modeling*: identifying topics from documents
+* *Frequent Patterns Mining*: knowing which entities occur together very
+often
+* *Clustering*: grouping similar items or grouping very similar
+documents, which are perhaps talking about the same subject
+* *Regression and Classification*: predicting house prices, or
+identifying a class of an item viz. product, document, person etc.
+* And many more
+

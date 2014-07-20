@@ -1,0 +1,243 @@
+## Recommendation Algorithms
+
+Input data takes a form of preferences. Preference is a tuple of three values: userId, itemId, preferenceValue. Mahout has its own data structures to store these values efficiently. It has FastMap, FastByIdMap, FastIDSet etc. The preferences are stored in memory using GenericPreference, GenericPreferenceArray etc.
+
+These values can be loaded from files or from databases or other storage media. For file backed storage, Mahout has FileDataModel class. It is simple to use.
+
+For recommendation algorithms, first we create a DataModel for user, item and preferences. Then we select a similarity measure i.e. UserSimilarity or ItemSimilarity. Next, we select a class that creates a neighbourhood of users or items based on a certain criteria. This criteria can be a threshold value of similarity or a limit on top N items.
+
+So we have a DataModel, a UserSimilarity ( or ItemSimilarity ) and a UserNeighborhood. Finally we create Recommender. Mahout has many different kinds of recommenders already built into it e.g.: GenericUserBasedRecommender, SlopeOneRecommender etc.
+
+Order of business here is:
+
+* Choose a data model and load preference data
+* Choose a similiarity metric
+* Define a neighborhood
+* Choose an algorithm implementation for recommendations
+* Now we are ready for recommendations.
+
+Another point to note is that we would need to evaluate the quality of recommendations that Mahout is giving us. For this there is a recommender evaluation framework already in place. Two metrics are:
+
+* RecommenderEvaluator: measures the divergence of estimated recommendation value from the actual recommendation value
+* RecommenderIRStatsEvaluator: measures precision and recall of the recommendation
+
+Apache Mahout has all of this already implemented.
+
+Lets look at MySQL based data model.
+
+### Data Models 
+
+**MySQL Data Model**
+
+Taste preferences table schema is as follows
+
+-------------------------------------
+CREATE TABLE taste_preferences (
+  user_id BIGINT NOT NULL,
+      item_id BIGINT NOT NULL,
+      preference FLOAT NOT NULL,
+      PRIMARY KEY (user_id, item_id),
+      INDEX (user_id),
+      INDEX (item_id));
+  
+-------------------------------------
+
+Setup a Database and table
+
+-----------------
+mysql> create database mia01;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use mia01;
+Database changed
+
+mysql> CREATE TABLE taste_preferences ( user_id BIGINT NOT NULL, item_id BIGINT NOT NULL, preference FLOAT NOT NULL, PRIMARY KEY (user_id, item_id), INDEX (user_id), INDEX (item_id));
+Query OK, 0 rows affected (0.11 sec)
+-----------------
+
+Create item similarity table:
+
+--------------------------------------
+CREATE TABLE taste_item_similarity (
+  item_id_a BIGINT NOT NULL,
+  item_id_b BIGINT NOT NULL,
+  similarity FLOAT NOT NULL,
+  PRIMARY KEY (item_id_a, item_id_b));
+  
+--------------------------------------
+
+### Components and their compatibility
+
+Boolean Preference Data Model
+
+* is not compatible with PearsonCorrelation / EuclideanDistance
+* is compatible with LogLikelihood
+
+In case of zero difference in estimate and actual preference, by the
+evauluator, we can always do a precision / recall evaluation -- using
+IRStats evaluator.
+
+### User based recommender
+
+_User based_ recommenders first finds similar users and then sees what
+they like.
+
+*Algorithm*: User-Based Recommender
+
+---------------------------------------------------------------------------
+for every item i that u has no preference for yet
+  for every other user v that has a preference for i
+    compute a similarity s between u and v
+    incorporate v's preference for i, weighted by s, into a running average
+return the top items, ranked by weighted average
+---------------------------------------------------------------------------
+
+Basic algorithm with a user neighbourhood:
+
+---------------------------------------------------------------------------
+for every other user w
+  compute a similarity s between u and w
+  retain the top users, ranked by similarity, as a neighbourhood n
+
+for item i in neighbourhood except the ones rated by u
+  for user v in neighbourhood who has a preference for i
+    compute a similarity s between u and v
+    incorporate v's preference for i, weighted by s, into a running average
+
+return the top items, ranked by weighted average
+---------------------------------------------------------------------------
+
+Kind of neighbourhood metrics:
+
+* fixed size
+* threshold based
+
+It is also possible to infer values for missing preferences in Mahout.
+This is achieveable using `PreferenceInferer` implementation such as
+`AveragePreferenceInferer`.
+
+### Item based recommender
+
+_Item based_ recommenders first sees what the user likes and then finds
+similar items.
+
+*Algorithm*: Item-Based Recommender
+
+-----------------------------------------------------------------
+for every item i that u has no preference for yet
+  for every item j that u has a preference for
+    compute a similarity s between i and j
+    add u's preference for j, weighted by s, to a running average
+    
+return the top items, ranked by weighted average
+-----------------------------------------------------------------
+
+Note: the running time of an item-based recommender scales up as the number of items increases, whereas a user-based recommender's running time goes up as the number of users increases.
+
+### Slope One recommender
+
+Algorithm
+
+----------------------------------------------------------------------
+Preprocessing
+
+  for every item i
+    for every other item j
+      for every user u expressing preference for both i and j
+        add the difference in u's preference for i and j to an average
+
+SlopeOne Algorithm(u: User)
+
+  for every item i for which u expresses no preference
+    for every item j for which u expresses a preference
+      find the average preference difference between j and i
+      add this diff to u's preference value for j
+      add this to a running average
+   return the top items, raned by these averages
+----------------------------------------------------------------------
+
+Implementation in a pseudo-code (Following Code is Scala like)
+
+--------------------------------------------------------------------
+I = { set of all items }
+U = { set of all users }
+M = { (i,u,p): i in I, u in U, p is a preference value }
+
+AvgDiff = ZeroTriangularMatrix(I.size)
+
+for(i <- I) {
+  val sumDiff = 0
+  val allExcept_i = I.filter(x => x != i)
+  val count = 0
+  for( j <- allExcept_i)) {
+    for( (u, pi, pj) <- M.findUsersFor(i,j)) {
+      sumDiff += pi - pj
+      count += 1
+    }
+  }
+  AvgDiff(i)(j) = sumDiff / count
+}
+
+def slopeOne(u: User, n: Int) = {
+  val notRatedItems = I.filter( x => ! u.preferredItems.contains(x))
+  val ratedItems = u.preferredItems();
+  val preferenceList = listForAllItems(I)
+  for( i <- notRatedItems ) {
+    val sumForI = 0
+    val count = 0
+    for( j <- ratedItems ) {
+      val avgDiff = AvgDiff(i)(j)
+      sumForI += u.preferenceFor(j) + avgDiff
+      count += 1
+    }
+    val avgForI = sumForI / count
+    preferenceList(i) = avgForI
+  }
+  preferenceList.sortBy(average).reverse().take(n)
+}
+--------------------------------------------------------------------
+
+*SlopeOne Gotchas*
+
+The difference does not take into account the number of users who
+provided the ratings. Even if the rating is given for two items only by
+one user, its weightage will be same as rating given by many more users.
+This can be mitigated by using weigthing schemes:
+
+* Count based weighting - more users means more weightage ( rating is
+more reliable )
+* Standard deviation based weighting - less standard deviation means
+more reliable ratings
+
+Diff calculation is a resource intesive process. It uses a lot of memory
+as well as CPU. This can be done over offline storage. The compution can
+also be distributed using Hadoop.
+
+### SVD Recommender
+
+Uses Matrix factorization to reduce the total data points, also summarizing them.
+
+Issues: Slow to compute. All SVD is done in memory.
+
+Produces good and meaningful results.
+
+### Linear interpolation based Recommender
+
+Implemented as KNN ( K Nearest Neighbours ).
+
+Sample code:
+
+----------------------------------------------------------
+m = new DataModel();
+ItemSimilarity s = new LogLikelihoodSimilarity(m);
+Optimizer optimizer = new NonNegativeQuadraticOptimizer();
+r = new KnnItemBasedRecommender(m,s,optimizer,10);
+----------------------------------------------------------
+
+### Cluster-based recommendation
+
+A variant on user-based CF, where items are recommendd to clusters of
+similar users. First all users are paritioned into clusters. Now the
+recommendations are computed for group of users belonging to the
+cluster.
+

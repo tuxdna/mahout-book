@@ -1,0 +1,4 @@
+## Introduction
+
+Machine Learning is a field of study that enables computers to learn themselves, without being explicitly programmed. It is one of the aspects of gaining knowledge from data. It is basically one one for the steps among many in Data Mining. We will discuss Data Mining first and the Machine Learning in context of Data Mining. Then we will move over to using Apache Mahout to perform Machine Learning on big data sets.
+

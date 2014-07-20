@@ -1,0 +1,140 @@
+## Using Mahout
+
+
+### Basic Ideas
+
+ * Similarity and Distance metrics
+ * Vector and Matrices
+ * Statistics
+ * Probability
+
+### Similarity / Distance metrics
+
+Different Similarity metrics
+
+ * Pearson correlation
+ * Euclidean distance
+ * Cosine measure
+ * Spearman correlation
+ * Tanimoto coefficient
+ * Log likelihood test
+
+Distance to Similarity conversion ( not the only way )
+
+-----------------
+s = 1 / ( 1 + d )
+-----------------
+
+image::images/similarity-metrics.png[Similarity Metric Selection]
+
+### Matrix
+
+image::images/247px-Matrix.svg.png[Matrix]
+
+### Vector
+
+image::images/vector-transpose.png[Vector]
+
+### Probability
+
+ * Conditional Probability: `P(A|B) = num(A intersection B) / num(B)`
+ * Bayes Rule: `P(A|B) = P(B|A) / P(B)`
+ * Probability Distribution: PMF for discreet, PDF for continuous variables
+
+### Mahout Scala API
+
+ * Vector
+ * Matrix
+
+( see the bindings )
+
+### Clustering
+
+image::images/clustering2.gif[Clustering]
+
+### Demo
+
+ * Naive Bayes Classifier
+ * Clustering the Synthetic Control Data
+ * Recommendation Algorithms
+
+
+### Similarity metrics
+
+We will discuss following
+
+ * Pearson correlation
+ * Euclidean distance
+ * Cosine measure
+ * Spearman correlation
+ * Tanimoto coefficient
+ * Log likelihood test
+
+**Pearson correlation**
+
+Pearson Correlation definition: The value is in the range -1.0 to 1.0
+
+-----------------------------------------------------------------------------------------------------
+Pearson correlation of two series is the ratio of their covariance to the product of their variances.
+-----------------------------------------------------------------------------------------------------
+
+Perason correlation problems:
+
+ * it doesn't take into account the number of items in which two users preferences overlap
+ * if two users overlap on only one item, no correlation can be computed because of how the computation is defined
+ * the correlation is also undefined if either series of preference values are all identical
+
+There is also a weighted pearson correlation metric, which moves
+correlation towards -1 or +1, when the preferences for some feathres are
+missing.
+
+**Euclidean distance**
+
+Euclidean distance is geometric distance between two n-dimensional points. This is a distance metric, so to convert it into a similarity metric, it is defined as
+
+--------------------------
+s = 1 / (1 + d )
+where s = similarity
+and d = euclidean distance
+--------------------------
+
+**Cosine measure**
+
+Cosine measure is the `cos(theta)` of angle `theta` between two points with respect to origin. This is essentially implemented as Pearson Correlation metric in Mahout, mentioned above.
+
+**Spearman correlation**
+
+Spearman correlation - defining similarity by relative rank
+
+**Tanimoto coefficient**
+
+Also know as Jackard coefficent is:
+
+-------------------------------------------------------
+tc = intersection of preferences / union of preferences
+-------------------------------------------------------
+
+**Log likelihood test**
+
+It is quite similar to Tanimoto Coefficient, which measures an overlap. However, Log Likelihood test, is an expression of how unlikely are will users have so much overlap, given the total number of items and the number of items each user has a preference for.
+
+Two similar users are likely to rate a movie common to them. However two dissimilar users are unlikely to rate a common movie. Therefore the more unilkely, the more similar two users shoud be. The resulting value can be interpreted as a probability that an overlap isn't just due to chance.
+
+**Distance measures**
+
+Distance / dissimilarity measures
+
+ * *Euclidean Distance*: Defined above.
+ * *Squared Euclidean Distance* : `d = (a1 - b1)^2 + (a2 - b2)^2 + ... + (an - bn) ^ 2`
+ * *Manhattan Distance*: `d = (a1 - b1) + (a2 - b2) + ... + (an - bn)`
+ * *Cosine Distance*: Defined above
+ * *Tanimoto Distance*: Defined above
+ * *Weighted Distance Measure*: Assigns weights for different features in Euclidean or Manhattan Distances. Define a weight Vector, which has weight factor values.
+
+### Classes of Clustering Algorithms
+
+ * *generative algorithm*: fit the model to the data. using the model, that
+data can be generated which fits the model. example: LDA
+
+ * *discriminative algorithm*: fit the data to the model; such as split the data into k sets based on some distance metric. example: hierarchical, k-means, SVM etc.
+
